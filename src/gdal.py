@@ -50,11 +50,49 @@ class Gdal():
         
         Arguments:
             band {img} -- array'e donusturulmek istenen goruntu
+                            band gdal objesi olmali
         
         Returns:
             array -- goruntuden array'e
         """
-        return self.band.ReadAsArray()
+        self.array = self.band.ReadAsArray()
+        return self.array
+
+    def get_prj(self):
+        """""
+        
+        Returns:
+            prj {prj} -- projeksiyon sistemini dondurur.
+        """
+        self.prj = self.dataset.GetProjection()
+
+        return self.prj
+
+    def write_one_array(self,
+                        driver="GTiff",
+                        outfile_name="data/out.tif",
+                        *,
+                        eType=gdal.GDT_Float32,
+                        X_clustered,
+                        prj):
+        """""[summary]
+        
+        Keyword Arguments:
+            driver {str} -- [veri formati] (default: {"GTiff"})
+            outfile_name {str} -- [cikti goruntu path'i] (default: {"data/out.tif"})
+            eType {[type]} -- [cografi veri tipi] (default: {gdal.GDT_Float32})
+            X_clustered {array} -- cluster edilen array 
+        """
+        self.driver = gdal.GetDriverByName(driver)
+        self.x_size = self.array.shape[1]
+        self.y_size = self.array.shape[0]
+        out_dataset = self.driver.Create(outfile_name, self.x_size, self.y_size, eType=eType)
+        out_dataset.SetProjection(prj)
+        out_dataset.GetRasterBand(1).WriteArray(X_clustered)
+        return out_dataset
+
+
+class Utils():
 
     @staticmethod
     def im2array_out(band):
@@ -62,9 +100,9 @@ class Gdal():
         
         Arguments:
             band {img} -- array'e donusturulmek istenen goruntu
+                            band gdal objesi olmali
         
         Returns:
             array -- goruntuden array'e
         """
         return band.ReadAsArray()
-
