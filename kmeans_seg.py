@@ -78,6 +78,7 @@ def kemans_distance(clusters, array, metric, out_dir):
                         str(clusters[index])+
                         "_"+
                         str(clusters[index+1])] = value
+    diffrences.append(value)
 
 
 
@@ -88,11 +89,13 @@ def kemans_distance(clusters, array, metric, out_dir):
     plt.savefig(create_path(graphs_path,'euclidean.png'))
     plt.clf()
 
-    # plt.plot(clusters, diffrences)
-    # plt.xlabel('Number of clusters')
-    # plt.ylabel('Diffrences')
-    # plt.title('Selecting k with the Elbow Method') 
-    # plt.savefig(create_path(graphs_path,'diffrences.png'))
+    plt.plot(clusters, diffrences)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Diffrences')
+    plt.title('Selecting k with the Elbow Method') 
+    plt.savefig(create_path(graphs_path,'diffrences.png'))
+    plt.clf()
+
 
     with open(values_path+'/data.json', 'w') as outfile:
         json.dump(meandist_json, outfile)
