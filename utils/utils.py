@@ -1,6 +1,6 @@
 import os, time
 
-def FindPaths(directory,stipe):
+def find_paths(directory,stipe):
     """""
      
      Arguments:
@@ -44,3 +44,20 @@ def timerfunc(func):
         return value
     return function_timer
  
+def get_basename_dirname(path):
+    base = os.path.basename(path)
+    basename, ext = os.path.splitext(base)
+    dirname = os.path.dirname(path)
+    return basename, dirname
+
+def create_path(directory, file):
+    path = os.path.join(directory, file)
+    return path
+
+def create_directory(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except Exception as e:
+        raise e
+
