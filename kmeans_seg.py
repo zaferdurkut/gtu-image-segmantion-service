@@ -10,7 +10,6 @@ import json
 
 #-------------------- Parameters ---------------------------------#
 
-
 data = "data/clipped_2.tif"
 clusters=range(1,10,2)
 #----------------------------------------------------------#
@@ -39,11 +38,11 @@ def kmean_clustering(gdal_object, im_dir_path, clusters):
         band_path = create_path(im_dir_path,str(band_number)); create_directory(band_path)
         img = Utils.im2array_out(band)
         array = img.reshape((-1, 1))
-        kemans_distance_single(clusters,array, 'euclidean',band_path)
+        kemans_distance(clusters,array, 'euclidean',band_path)
 
 
 @timerfunc
-def kemans_distance_single(clusters, array, metric, out_dir):
+def kemans_distance(clusters, array, metric, out_dir):
     """""
     
     Arguments:
@@ -75,7 +74,10 @@ def kemans_distance_single(clusters, array, metric, out_dir):
     for index in range(0,len(meandist)-1):
         value = meandist[index+1] - meandist[index] 
         diffrences.append(value)
-        diffrences_json[index] = value
+        diffrences_json[
+                        str(clusters[index])+
+                        "_"+
+                        str(clusters[index+1])] = value
 
 
 
@@ -136,6 +138,6 @@ if __name__ == "__main__":
     kmean_clustering(gdal_object, im_dir_path,clusters)
 
 
-    # kemans_distance_single(clusters,array, 'euclidean',im_dir_path)
+    # kemans_distance(clusters,array, 'euclidean',im_dir_path)
     # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3)
 
