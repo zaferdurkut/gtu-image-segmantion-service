@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import json
 
-def kmean_clustering(gdal_object, im_dir_path, clusters):
+def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
 
     bands = gdal_object.get_bands()
     img = gdal_object.im2array()
@@ -17,7 +17,7 @@ def kmean_clustering(gdal_object, im_dir_path, clusters):
         band_path = create_path(im_dir_path,str(band_number)); create_directory(band_path)
         img = Utils.im2array_out(band)
         array = img.reshape((-1, 1))
-        kemans_distance(clusters,array, 'euclidean',band_path)
+        kemans_distance(clusters, array, metric, band_path)
 
 
 @timerfunc

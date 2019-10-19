@@ -34,7 +34,7 @@ gdal_object.open()
 
 
 if __name__ == "__main__":
-    kmean_clustering(gdal_object, im_dir_path,clusters)
+    kmean_clustering(gdal_object, im_dir_path,clusters,'euclidean')
 
 
     # kemans_distance(clusters,array, 'euclidean',im_dir_path)
