@@ -24,48 +24,26 @@ create_directory(im_dir_path)
 
 gdal_object = Gdal(data)
 gdal_object.open()
-band = gdal_object.get_band(1)
-img = gdal_object.im2array()
-array = img.reshape((-1, 1))
+# band = gdal_object.get_band(1)
+# img = gdal_object.im2array()
+# array = img.reshape((-1, 1))
 
 #----------------------------------------------------------#
 
+def kmean_clustering(gdal_object, im_dir_path, clusters):
 
-
-
-@timerfunc
-def kmeans_cluster2raster_example(img, array, outfile_name, driver,n_clusters):
-    """""
-    Bu method verilen bir band icin kmeans clustirng yapilarak 
-    ilgili clustirng sonucunu ayni extent icin tif olarak kayit
-    edilmesini amaclayarak hazirlanmistir.
-    
-    Arguments:
-        img {[gdal object]} -- [ham goruntunun gdal ile acilmis hali]
-        array {[type]} -- [goruntuden arraye donusturulmus array]
-        outfile_name {[type]} -- [cikti dizini]
-        driver {[type]} -- [cikcak goruntu formati]
-    
-    Raises:
-        e: errors
-    
-    Returns:
-        [Boolean] -- [Status is True]
-    """
-
-    try:
-        k_means = KMeans(n_clusters=n_clusters)
-        k_means.fit(array)
-        X_clustered = k_means.labels_
-        X_clustered = X_clustered.reshape(img.shape)
-        gdal_object.array2raster(driver=driver, outfile_name=outfile_name, X_clustered=X_clustered)
-        return True
-    except Exception as e:
-        raise e
+    bands = gdal_object.get_bands()
+    img = gdal_object.im2array()
+    for band_number, band in bands.items():
+        print("\n Band Number: {band_number}".format(band_number=band_number))
+        band_path = create_path(im_dir_path,str(band_number)); create_directory(band_path)
+        img = Utils.im2array_out(band)
+        array = img.reshape((-1, 1))
+        kemans_distance_single(clusters,array, 'euclidean',band_path)
 
 
 @timerfunc
-def kemans_distance(clusters, array, metric, out_dir):
+def kemans_distance_single(clusters, array, metric, out_dir):
     """""
     
     Arguments:
@@ -106,6 +84,7 @@ def kemans_distance(clusters, array, metric, out_dir):
     plt.ylabel('Average distance')
     plt.title('Selecting k with the Elbow Method') 
     plt.savefig(create_path(graphs_path,'euclidean.png'))
+    plt.clf()
 
     # plt.plot(clusters, diffrences)
     # plt.xlabel('Number of clusters')
@@ -118,13 +97,45 @@ def kemans_distance(clusters, array, metric, out_dir):
 
     with open(values_path+'/diffrences.json', 'w') as outfile:
         json.dump(diffrences_json, outfile)
-    
+
     return True
 
 
+@timerfunc
+def kmeans_cluster2raster_example(img, array, outfile_name, driver,n_clusters):
+    """""
+    Bu method verilen bir band icin kmeans clustirng yapilarak 
+    ilgili clustirng sonucunu ayni extent icin tif olarak kayit
+    edilmesini amaclayarak hazirlanmistir.
+    
+    Arguments:
+        img {[gdal object]} -- [ham goruntunun gdal ile acilmis hali]
+        array {[type]} -- [goruntuden arraye donusturulmus array]
+        outfile_name {[type]} -- [cikti dizini]
+        driver {[type]} -- [cikcak goruntu formati]
+    
+    Raises:
+        e: errors
+    
+    Returns:
+        [Boolean] -- [Status is True]
+    """
+
+    try:
+        k_means = KMeans(n_clusters=n_clusters)
+        k_means.fit(array)
+        X_clustered = k_means.labels_
+        X_clustered = X_clustered.reshape(img.shape)
+        gdal_object.array2raster(driver=driver, outfile_name=outfile_name, X_clustered=X_clustered)
+        return True
+    except Exception as e:
+        raise e
 
 
 if __name__ == "__main__":
-    kemans_distance(clusters,array, 'euclidean',im_dir_path)
+    kmean_clustering(gdal_object, im_dir_path,clusters)
+
+
+    # kemans_distance_single(clusters,array, 'euclidean',im_dir_path)
     # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3)
 
