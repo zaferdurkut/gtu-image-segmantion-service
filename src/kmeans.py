@@ -1,14 +1,24 @@
 from src.gdal import Gdal, Utils
-import gdal
 from utils.utils import *
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import cdist
-import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
 import json
 
+@timerfunc
 def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
+    """""
+    Gdal ile acilan goruntu icin het bir band'ina kmeans algoritmasinin
+    uygulanmasi ve algoritmalara göre segment verilerinin raporlanmasi islemin
+    yapar.
+    
+    Arguments:
+        gdal_object {gdal object} -- [gdal ile acilmis goruntu]
+        im_dir_path {path} -- [rapor verilerinin yazilacagi dizin]
+        clusters {list} -- [hangi aralikta tarama yapacaginin listesi]
+        metric {[type]} -- [oklit uzakligi hesaplamasinda hesaplama yontemi]
+    """
 
     bands = gdal_object.get_bands()
     img = gdal_object.im2array()
@@ -86,7 +96,7 @@ def kemans_distance(clusters, array, metric, out_dir):
 
 
 @timerfunc
-def kmeans_cluster2raster_example(img, array, outfile_name, driver,n_clusters):
+def kmeans_cluster2raster_example(img, array, outfile_name, driver,n_clusters, gdal_object):
     """""
     Bu method verilen bir band icin kmeans clustirng yapilarak 
     ilgili clustirng sonucunu ayni extent icin tif olarak kayit

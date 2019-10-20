@@ -1,19 +1,13 @@
-from src.gdal import Gdal, Utils
 from src.kmeans import *
-import gdal
 from utils.utils import *
-from sklearn.cluster import KMeans
-from scipy.spatial.distance import cdist
-import pandas as pd
-import numpy as np
-import matplotlib.pylab as plt
-import json
+
 
 #-------------------- Parameters ---------------------------------#
 
 data = "data/clipped_2.tif"
-clusters=range(1,10,2)
-#----------------------------------------------------------#
+clusters=range(1,100,10)
+
+#---------------------   Out Path  Operations ---------------------------------#
 
 im_basename, im_dirname = get_basename_dirname(data)
 im_dir_path = create_path(im_dirname,im_basename)
@@ -38,5 +32,5 @@ if __name__ == "__main__":
 
 
     # kemans_distance(clusters,array, 'euclidean',im_dir_path)
-    # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3)
+    # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3, gdal_object)
 
