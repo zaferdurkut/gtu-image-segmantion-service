@@ -137,18 +137,17 @@ def local_variance(clusters, array, metric, out_dir):
     diffrences.append(value)
 
 
-
     plt.plot(clusters, meandist)
     plt.xlabel('Number of clusters')
-    plt.ylabel('Average distance')
-    plt.title('Selecting k with the Elbow Method') 
-    plt.savefig(create_path(graphs_path,'euclidean.png'))
+    plt.ylabel('Varience')
+    plt.title('Selecting k with the Local Varience') 
+    plt.savefig(create_path(graphs_path,'varience.png'))
     plt.clf()
 
     plt.plot(clusters, diffrences)
     plt.xlabel('Number of clusters')
     plt.ylabel('Diffrences')
-    plt.title('Selecting k with the Elbow Method') 
+    plt.title('Selecting k with the Local Varience') 
     plt.savefig(create_path(graphs_path,'diffrences.png'))
     plt.clf()
 

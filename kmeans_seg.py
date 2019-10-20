@@ -25,7 +25,7 @@ gdal_object.open()
 
 if __name__ == "__main__":
     kmean_clustering(gdal_object, im_dir_path,clusters,'euclidean')
-
+    
 
     # kemans_distance(clusters,array, 'euclidean',im_dir_path)
     # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3, gdal_object)
