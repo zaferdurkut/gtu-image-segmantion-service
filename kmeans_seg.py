@@ -18,11 +18,7 @@ create_directory(im_dir_path)
 
 gdal_object = Gdal(data)
 gdal_object.open()
-# band = gdal_object.get_band(1)
-# img = gdal_object.im2array()
-# array = img.reshape((-1, 1))
 
-#----------------------------------------------------------#
 
 
 
