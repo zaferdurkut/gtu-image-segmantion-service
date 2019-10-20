@@ -38,7 +38,7 @@ def timerfunc(func):
         value = func(*args, **kwargs)
         end = time.time()
         runtime = end - start
-        msg = "The runtime for {func} took {time} seconds to complete"
+        msg = "\tThe runtime for {func} took {time} seconds to complete"
         print(msg.format(func=func.__name__,
                          time=runtime))
         return value

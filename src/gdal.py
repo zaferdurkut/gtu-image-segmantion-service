@@ -25,9 +25,9 @@ class Gdal():
 
         if self.dataset:
             band_list = {}
-            for index in range(1, self.dataset.RasterCount):
-                self.band = self.dataset.GetRasterBand(index)
-                band_list[index] = self.band
+            for band_number in range(1, self.dataset.RasterCount+1):
+                self.band = self.dataset.GetRasterBand(band_number)
+                band_list[band_number] = self.band
             
         return band_list
     
