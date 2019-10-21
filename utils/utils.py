@@ -61,3 +61,8 @@ def create_directory(directory):
     except Exception as e:
         raise e
 
+def create_method_path(out_dir, algorithm):
+    algorithm_path = create_path(out_dir, algorithm); create_directory(algorithm_path)
+    values_path = create_path(algorithm_path,'values'); create_directory(values_path)
+    graphs_path = create_path(algorithm_path,'graphs'); create_directory(graphs_path)
+    return algorithm_path, values_path, graphs_path

@@ -8,6 +8,7 @@ import json
 from scipy import ndimage
 
 
+
 @timerfunc
 def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
     """""
@@ -29,12 +30,59 @@ def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
         band_path = create_path(im_dir_path,str(band_number)); create_directory(band_path)
         img = Utils.im2array_out(band)
         array = img.reshape((-1, 1))
-        kemans_distance(clusters, array, metric, band_path)
-        local_variance(clusters, array, metric, band_path)
+
+        meandist_json = {}
+        meandist=[]
+        local_varience_json = {}
+        local_varience = []
+        for number_of_clusters  in clusters:
+            print("\tNumber of Cluster: {number_of_clusters}".format(
+                number_of_clusters = number_of_clusters
+            ))
+            # Model Training
+            model = kmean_model_train(number_of_clusters, array)
+            # kmeans_distance
+            meandist_value = calculate_kmeans_distance(array,model,metric)
+            meandist.append(meandist_value)
+            meandist_json[number_of_clusters] = meandist_value
+            # local_variance
+            local_varience_value = calculate_local_varience(model, array)        
+            local_varience.append(local_varience_value)
+            local_varience_json[number_of_clusters] = local_varience_value
+        
+        kmeans_distance_graph_data_export(clusters, band_path, meandist, meandist_json)
+        local_variance_graph_data_export(clusters, band_path, local_varience, local_varience_json)
+
+    print("\n\t-----------------------------------------------------------------------------\n")
+    return True
+
 
 
 @timerfunc
-def kemans_distance(clusters, array, metric, out_dir):
+def calculate_local_varience(model, array):
+    X_clustered = model.labels_
+    X_clustered = X_clustered.reshape(array.shape)
+    # label = ndimage.label(X_clustered)
+    # value = ndimage.variance(model, label)
+    value = ndimage.variance(array)
+    return value
+
+@timerfunc
+def calculate_kmeans_distance(array,model,metric):
+    value = sum( 
+        np.min( 
+            cdist(array, model.cluster_centers_, metric), axis=1)) / array.shape[0]
+    return value
+
+
+@timerfunc
+def kmean_model_train(number_of_clusters, array):
+    model = KMeans(n_clusters=number_of_clusters)
+    model.fit(array)
+    return model
+
+@timerfunc
+def kmeans_distance_graph_data_export(clusters, out_dir, meandist, meandist_json ):
     """""
     
     Arguments:
@@ -42,7 +90,62 @@ def kemans_distance(clusters, array, metric, out_dir):
         array {array} -- goruntuden elde edilmis array
         outfile_name {png} -- cikacak grafik pathi
         metric {text} -- https://docs.scipy.org/doc/scipy-0.15.1/reference/generated/scipy.spatial.distance.cdist.html
-        out_dir {path} -- verilerin cikacagi path
+        out_dir {path} -- verilerin cikacagi pathcre
+    Returns:
+        [type] -- [description]
+    """
+    print("\n")
+    algorithm_path = create_path(out_dir,'Elbow_Method'); create_directory(algorithm_path)
+    values_path = create_path(algorithm_path,'values'); create_directory(values_path)
+    graphs_path = create_path(algorithm_path,'graphs'); create_directory(graphs_path)
+
+
+    diffrences_json = {}
+    diffrences = []
+    for index in range(0,len(meandist)-1):
+        value = meandist[index+1] - meandist[index] 
+        diffrences.append(value)
+        diffrences_json[
+                        str(clusters[index])+
+                        "_"+
+                        str(clusters[index+1])] = value
+    diffrences.append(value)
+
+
+
+    plt.plot(clusters, meandist)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Average distance')
+    plt.title('Selecting k with the Elbow Method') 
+    plt.savefig(create_path(graphs_path,'euclidean.png'))
+    plt.clf()
+
+    plt.plot(clusters, diffrences)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Diffrences')
+    plt.title('Selecting k with the Elbow Method') 
+    plt.savefig(create_path(graphs_path,'diffrences.png'))
+    plt.clf()
+
+
+    with open(values_path+'/data.json', 'w') as outfile:
+        json.dump(meandist_json, outfile)
+
+    with open(values_path+'/diffrences.json', 'w') as outfile:
+        json.dump(diffrences_json, outfile)
+
+    return True
+
+@timerfunc
+def kmeans_distance(clusters, array, metric, out_dir):
+    """""
+    
+    Arguments:
+        clusters {list} -- baslangic ve bitis arasinda belli step ile olsuturulmus number_of_clusters sayisi
+        array {array} -- goruntuden elde edilmis array
+        outfile_name {png} -- cikacak grafik pathi
+        metric {text} -- https://docs.scipy.org/doc/scipy-0.15.1/reference/generated/scipy.spatial.distance.cdist.html
+        out_dir {path} -- verilerin cikacagi pathcre
     Returns:
         [type] -- [description]
     """
@@ -98,6 +201,59 @@ def kemans_distance(clusters, array, metric, out_dir):
     return True
 
 @timerfunc
+def local_variance_graph_data_export(clusters, out_dir, meandist, meandist_json):
+    """""
+    
+    Arguments:
+        clusters {list} -- baslangic ve bitis arasinda belli step ile olsuturulmus number_of_clusters sayisi
+        array {array} -- goruntuden elde edilmis array
+        outfile_name {png} -- cikacak grafik pathi
+        metric {text} -- https://docs.scipy.org/doc/scipy-0.15.1/reference/generated/scipy.spatial.distance.cdist.html
+        out_dir {path} -- verilerin cikacagi path
+    Returns:
+        [type] -- [description]
+    """
+    print("\n")
+    algorithm_path = create_path(out_dir,'Local_Variance'); create_directory(algorithm_path)
+    values_path = create_path(algorithm_path,'values'); create_directory(values_path)
+    graphs_path = create_path(algorithm_path,'graphs'); create_directory(graphs_path)
+
+    diffrences_json = {}
+    diffrences = []
+    for index in range(0,len(meandist)-1):
+        value = meandist[index+1] - meandist[index] 
+        diffrences.append(value)
+        diffrences_json[
+                        str(clusters[index])+
+                        "_"+
+                        str(clusters[index+1])] = value
+    diffrences.append(value)
+
+
+    plt.plot(clusters, meandist)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Varience')
+    plt.title('Selecting k with the Local Varience') 
+    plt.savefig(create_path(graphs_path,'varience.png'))
+    plt.clf()
+
+    plt.plot(clusters, diffrences)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Diffrences')
+    plt.title('Selecting k with the Local Varience') 
+    plt.savefig(create_path(graphs_path,'diffrences.png'))
+    plt.clf()
+
+
+    with open(values_path+'/data.json', 'w') as outfile:
+        json.dump(meandist_json, outfile)
+
+    with open(values_path+'/diffrences.json', 'w') as outfile:
+        json.dump(diffrences_json, outfile)
+
+    return True
+
+@timerfunc
 def local_variance(clusters, array, metric, out_dir):
     """""
     
@@ -120,8 +276,10 @@ def local_variance(clusters, array, metric, out_dir):
         model=KMeans(n_clusters=number_of_clusters) # 
         model.fit(array)
         X_clustered = model.labels_
-        # value = ndimage.variance(array, X_clustered)
-        value = ndimage.variance(array)
+        X_clustered = X_clustered.reshape(array.shape)
+        label = ndimage.label(X_clustered)
+        value = ndimage.variance(model, label)
+        # value = ndimage.variance(array)
         meandist.append(value)
         meandist_json[number_of_clusters] = value
 
