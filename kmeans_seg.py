@@ -5,7 +5,7 @@ from utils.utils import *
 #-------------------- Parameters ---------------------------------#
 
 data = "data/clipped_2.tif"
-clusters=range(1,100,10)
+clusters=range(1,100,5)
 
 #---------------------   Out Path  Operations ---------------------------------#
 

@@ -60,11 +60,10 @@ def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
 
 @timerfunc
 def calculate_local_varience(model, array):
-    X_clustered = model.labels_
-    X_clustered = X_clustered.reshape(array.shape)
-    # label = ndimage.label(X_clustered)
-    # value = ndimage.variance(model, label)
-    value = ndimage.variance(array)
+    values = model.cluster_centers_
+    labels = model.labels_
+    value = ndimage.variance(values)
+    # print(ndimage.standard_deviation(values))
     return value
 
 @timerfunc
@@ -73,7 +72,6 @@ def calculate_kmeans_distance(array,model,metric):
         np.min( 
             cdist(array, model.cluster_centers_, metric), axis=1)) / array.shape[0]
     return value
-
 
 @timerfunc
 def kmean_model_train(number_of_clusters, array):
