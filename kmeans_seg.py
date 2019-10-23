@@ -5,7 +5,7 @@ from utils.utils import *
 #-------------------- Parameters ---------------------------------#
 
 data = "data/clipped_2.tif"
-clusters=range(1,100,10)
+clusters=range(1,100,5)
 
 #---------------------   Out Path  Operations ---------------------------------#
 
@@ -27,6 +27,6 @@ if __name__ == "__main__":
     kmean_clustering(gdal_object, im_dir_path,clusters,'euclidean')
     
 
-    # kemans_distance(clusters,array, 'euclidean',im_dir_path)
+    # kmeans_distance(clusters,array, 'euclidean',im_dir_path)
     # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3, gdal_object)
 
