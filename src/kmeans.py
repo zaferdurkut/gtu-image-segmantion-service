@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import json
 from scipy import ndimage
-
+from sklearn.metrics import silhouette_score
 
 
 @timerfunc
@@ -35,6 +35,8 @@ def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
         meandist=[]
         local_varience_json = {}
         local_varience = []
+        silhouette_score_json = {}
+        silhouette_score = []
         for number_of_clusters  in clusters:
             print("\tNumber of Cluster: {number_of_clusters}".format(
                 number_of_clusters = number_of_clusters
@@ -46,23 +48,32 @@ def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
             meandist.append(meandist_value)
             meandist_json[number_of_clusters] = meandist_value
             # local_variance
-            local_varience_value = calculate_local_varience(model, array)        
-            local_varience.append(local_varience_value)
-            local_varience_json[number_of_clusters] = local_varience_value
+            # local_varience_value = calculate_local_varience(model, array)        
+            # local_varience.append(local_varience_value)
+            # local_varience_json[number_of_clusters] = local_varience_value
+            # silhouette score
+            silhouette_score_value = calculate_silhouette_score(model, array,metric)        
+            silhouette_score.append(silhouette_score_value)
+            silhouette_score_json[number_of_clusters] = silhouette_score_value
         
         kmeans_distance_graph_data_export(clusters, band_path, meandist, meandist_json)
-        local_variance_graph_data_export(clusters, band_path, local_varience, local_varience_json)
+        # local_variance_graph_data_export(clusters, band_path, local_varience, local_varience_json)
+        silhouette_score_graph_data_export(clusters, band_path, silhouette_score, silhouette_score_json)
 
     print("\n\t-----------------------------------------------------------------------------\n")
     return True
 
-
+@timerfunc
+def calculate_silhouette_score(model, array, metric):
+    labels = model.labels_
+    value = silhouette_score(array, labels, metric = metric)
+    return value
 
 @timerfunc
 def calculate_local_varience(model, array):
     values = model.cluster_centers_
     labels = model.labels_
-    value = ndimage.variance(array,labels)
+    value = ndimage.variance(array, labels)
     # print(ndimage.standard_deviation(values))
     return value
 
@@ -78,6 +89,62 @@ def kmean_model_train(number_of_clusters, array):
     model = KMeans(n_clusters=number_of_clusters)
     model.fit(array)
     return model
+
+@timerfunc
+def silhouette_score_graph_data_export(clusters, out_dir, meandist, meandist_json ):
+    """""
+    
+    Arguments:
+        clusters {list} -- baslangic ve bitis arasinda belli step ile olsuturulmus number_of_clusters sayisi
+        array {array} -- goruntuden elde edilmis array
+        outfile_name {png} -- cikacak grafik pathi
+        metric {text} -- https://docs.scipy.org/doc/scipy-0.15.1/reference/generated/scipy.spatial.distance.cdist.html
+        out_dir {path} -- verilerin cikacagi pathcre
+    Returns:
+        [type] -- [description]
+    """
+    print("\n")
+    algorithm_path = create_path(out_dir,'Silhouette_Score'); create_directory(algorithm_path)
+    values_path = create_path(algorithm_path,'values'); create_directory(values_path)
+    graphs_path = create_path(algorithm_path,'graphs'); create_directory(graphs_path)
+
+
+    diffrences_json = {}
+    diffrences = []
+    for index in range(0,len(meandist)-1):
+        value = meandist[index+1] - meandist[index] 
+        diffrences.append(value)
+        diffrences_json[
+                        str(clusters[index])+
+                        "_"+
+                        str(clusters[index+1])] = value
+    diffrences.append(value)
+
+
+
+    plt.plot(clusters, meandist,'r-o')
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Silhouette Score')
+    plt.title('Selecting k with the Silhouette Score') 
+    plt.savefig(create_path(graphs_path,'silhouette_score.png'))
+    plt.clf()
+
+    plt.plot(clusters, diffrences,'r-o')
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Diffrences')
+    plt.title('Selecting k with the Silhouette Score') 
+    plt.savefig(create_path(graphs_path,'diffrences.png'))
+    plt.clf()
+
+
+    with open(values_path+'/data.json', 'w') as outfile:
+        json.dump(meandist_json, outfile)
+
+    with open(values_path+'/diffrences.json', 'w') as outfile:
+        json.dump(diffrences_json, outfile)
+
+    return True
+
 
 @timerfunc
 def kmeans_distance_graph_data_export(clusters, out_dir, meandist, meandist_json ):
@@ -111,14 +178,14 @@ def kmeans_distance_graph_data_export(clusters, out_dir, meandist, meandist_json
 
 
 
-    plt.plot(clusters, meandist)
+    plt.plot(clusters, meandist,'r-o')
     plt.xlabel('Number of clusters')
     plt.ylabel('Average distance')
     plt.title('Selecting k with the Elbow Method') 
     plt.savefig(create_path(graphs_path,'euclidean.png'))
     plt.clf()
 
-    plt.plot(clusters, diffrences)
+    plt.plot(clusters, diffrences,'r-o')
     plt.xlabel('Number of clusters')
     plt.ylabel('Diffrences')
     plt.title('Selecting k with the Elbow Method') 
@@ -228,14 +295,14 @@ def local_variance_graph_data_export(clusters, out_dir, meandist, meandist_json)
     diffrences.append(value)
 
 
-    plt.plot(clusters, meandist)
+    plt.plot(clusters, meandist,'r-o')
     plt.xlabel('Number of clusters')
     plt.ylabel('Varience')
     plt.title('Selecting k with the Local Varience') 
     plt.savefig(create_path(graphs_path,'varience.png'))
     plt.clf()
 
-    plt.plot(clusters, diffrences)
+    plt.plot(clusters, diffrences,'r-o')
     plt.xlabel('Number of clusters')
     plt.ylabel('Diffrences')
     plt.title('Selecting k with the Local Varience') 
