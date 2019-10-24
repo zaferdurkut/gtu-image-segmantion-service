@@ -46,6 +46,7 @@ docker exec -it gtuseg_app_1 python kmeans_seg.py --data data/clipped_2.tif --st
 ## Output Yapısı
 Yazılım çalıştırıldıktan sonra verilen data adında yeni bir klasör oluşur. Oluşan klasör altında her band için ayrı klasörler oluşmaktadır. her bir band için algoritmalara göre yeni klasörler oluşur. Her bir algoritma altında graph altında k değerine göre algoritmadan çıkan değerler ve sıralı olarak k değerleri arasındaki fark grafikleri üretilir. values klasörü altında JSON formatında fark datası ve algoritmadan çıkan değerler bulunmaktadır.
 ![output](static/structure.jpeg "Output")
+
 Örnek grafik;
 ![Graph](static/silhouette_score.png "Graph")
 
