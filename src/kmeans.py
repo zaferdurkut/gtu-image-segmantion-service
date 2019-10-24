@@ -62,7 +62,7 @@ def kmean_clustering(gdal_object, im_dir_path, clusters, metric):
 def calculate_local_varience(model, array):
     values = model.cluster_centers_
     labels = model.labels_
-    value = ndimage.variance(values)
+    value = ndimage.variance(array,labels)
     # print(ndimage.standard_deviation(values))
     return value
 
