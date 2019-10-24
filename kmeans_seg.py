@@ -24,6 +24,13 @@ parser.add_argument('--step',
                        type=int,
                        help='the path to list')
 
+parser.add_argument('--metric',
+                       metavar='metric',
+                       default='euclidean',
+                       type=str,
+                       help='https://docs.scipy.org/doc/scipy-0.15.1/reference/generated/scipy.spatial.distance.cdist.html')
+                       
+
 args = parser.parse_args()
 
 if args.data is None:
@@ -52,7 +59,7 @@ gdal_object.open()
 
 
 if __name__ == "__main__":
-    kmean_clustering(gdal_object, im_dir_path,clusters,'euclidean')
+    kmean_clustering(gdal_object, im_dir_path,clusters,args.metric)
     
     # kmeans_distance(clusters,array, 'euclidean',im_dir_path)
     # kmeans_cluster2raster_example(img,array,"data/out.tif","GTiff",3, gdal_object)
