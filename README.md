@@ -49,6 +49,10 @@ Yazılım çalıştırıldıktan sonra verilen data adında yeni bir klasör olu
 
 Örnek grafik;
 ![Graph](static/silhouette_score.png "Graph")
+Örnek JSON Data
+```
+{"8": 0.5491748766886149, "2": 0.6586461572809071, "4": 0.5972121118190042, "6": 0.5443153537435251}
+```
 
 
 ### Memory Kullanımının Tespiti
