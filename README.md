@@ -28,7 +28,7 @@ Servisin kurulumu tamamlandıktan sonra servise giriş için
 docker exec -it gtuseg_app_1 bash
 ```
 
-## Yazılın Çalıştırılması
+## Yazılımın Çalıştırılması
 Servise girildikten sonra K-Means Clustering k değerinin taraması için data yolu, başlangıç, bitiş ve adım değerlerinin verilmesi gerekmektedir. Verilemdiğinde 2 ile 10 arasında 2 adım sayısı ile çalışmaktadır. Data olmadan ilgili servis çalışmamaktadır.
 ```
 python kmeans_seg.py --data data/your_data.tif --start your_start_value --end your_end_value --step your_step_value
