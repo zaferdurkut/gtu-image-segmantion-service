@@ -1,4 +1,4 @@
-# GTU Satellite Image Segmantation Service
+# GTU Satellite Image Segmentation Service
 Bu proje K-Means Clustering kullanılarak Uydu Görüntüleri üzerinde cluster sayısının (k) en optimum şekilde belirlenmesi amacıyla oluşturulmuştur. Çalışmada her band için ayrı ayrı clustering yapılarak Elbow Method, Local Variance ve Silhouette Score 'a göre k değerinin  optimizasyonu için her bir cluster'a ait değerleri değerleri arasındaki farkları JSON formatında kayıt eder ve grafik üzerinde gösterir. Kullanıcıya k değerinin seçiminde öneri yapmak amaçlanmaktadır.
 
 ## Yazılımın Kurulumu
