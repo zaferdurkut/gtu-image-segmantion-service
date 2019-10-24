@@ -12,17 +12,17 @@ parser.add_argument('--start',
                        metavar='start',
                        default=2,
                        type=int,
-                       help='the path to list')
+                       help='start of k value')
 parser.add_argument('--end',
                        metavar='end',
                        default=10,
                        type=int,
-                       help='the path to list')
+                       help='end of k value')
 parser.add_argument('--step',
                        metavar='step',
                        default=2,
                        type=int,
-                       help='the path to list')
+                       help='step of k value')
 
 parser.add_argument('--metric',
                        metavar='metric',
