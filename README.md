@@ -59,15 +59,15 @@ Yazılım çalıştırıldıktan sonra verilen data adında yeni bir klasör olu
  İlgili script için memory kullanım datasını oluşturulması için
 
 
-``
+```
 mprof run --include-children python kmeans_seg.py --data data/clipped_2.tif --start 2 --end 10 --step 2
-``
+```
 
 İlgili memory kullanım datasından profil oluşturmak için
 
-``
+```
 mprof plot --output memory-profile.png
-``
+```
 Örnek Profil Datası
 
 ![memory](static/memory-profile.png "Memory")
