@@ -31,6 +31,21 @@ class Gdal():
             
         return band_list
     
+    def get_raster_info(self):
+        """""
+        
+        Returns:
+            raster_info {dict}-- goruntunun band sayısı ve boyutunu dict list olarak dondurur.
+        """
+
+        if self.dataset:
+            raster_info = {}
+            raster_info["band"] = self.dataset.RasterCount # band
+            raster_info["col"] = self.dataset.RasterXSize # cols
+            raster_info["row"] = self.dataset.RasterYSize # rows
+
+        return raster_info
+
     def get_band(self, band_number = 1):
         """""
         
