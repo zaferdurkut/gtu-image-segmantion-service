@@ -114,3 +114,6 @@ airflow/airflow-webserver.pid
 airflow/logs/scheduler/latest
 
 models/__pycache__/
+
+
+.vscode

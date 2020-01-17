@@ -39,7 +39,7 @@ python multi_seg.py --data data/clipped.tif --task Optimum_Parameter --start  2 
 ```
 #### Multi_Segmentation
 ```
-python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5
+python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5 --export_vector_layer Yes
 ```
 #### Multi_Segmentation_With_Optimum_Parameter
 * #### Yapım aşamasında
@@ -50,7 +50,7 @@ python multi_seg.py --data data/clipped.tif --task Multi_Segmentation_With_Optim
 
 Docker Container'a girmeden çalıştırmak için
 ```
-docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5
+docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5 --export_vector_layer Yes
 ```
 ```
 docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Optimum_Parameter --start  2 --end 20 --step 1
