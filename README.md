@@ -33,15 +33,32 @@ Servise girildikten sonra K-Means Clustering k değerinin taraması için data y
 ```
 python kmeans_seg.py --data data/your_data.tif --start your_start_value --end your_end_value --step your_step_value
 ```
-Örnek
+#### Optimum_Parameter
 ```
-python kmeans_seg.py --data data/clipped_2.tif --start 2 --end 10 --step 2
+python multi_seg.py --data data/clipped.tif --task Optimum_Parameter --start  2 --end 20 --step 1
 ```
-Docker Container'a girmeden çalıştırmak için
+#### Multi_Segmentation
 ```
-docker exec -it gtuseg_app_1 python kmeans_seg.py --data data/clipped_2.tif --start 2 --end 10 --step 2
+python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5
+```
+#### Multi_Segmentation_With_Optimum_Parameter
+* #### Yapım aşamasında
+```
+python multi_seg.py --data data/clipped.tif --task Multi_Segmentation_With_Optimum_Parameter --start  2 --end 20 --step 1
 ```
 
+
+Docker Container'a girmeden çalıştırmak için
+```
+docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5
+```
+```
+docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Optimum_Parameter --start  2 --end 20 --step 1
+```
+```
+docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Multi_Segmentation_With_Optimum_Parameter --start  2 --end 20 --step 1
+
+```
 
 ## Output Yapısı
 Yazılım çalıştırıldıktan sonra verilen data adında yeni bir klasör oluşur. Oluşan klasör altında her band için ayrı klasörler oluşmaktadır. her bir band için algoritmalara göre yeni klasörler oluşur. Her bir algoritma altında graph altında k değerine göre algoritmadan çıkan değerler ve sıralı olarak k değerleri arasındaki fark grafikleri üretilir. values klasörü altında JSON formatında fark datası ve algoritmadan çıkan değerler bulunmaktadır.
