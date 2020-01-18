@@ -35,7 +35,7 @@ python kmeans_seg.py --data data/your_data.tif --start your_start_value --end yo
 ```
 #### Optimum_Parameter
 ```
-python multi_seg.py --data data/clipped.tif --task Optimum_Parameter --start  2 --end 20 --step 1
+python multi_seg.py --data data/clipped.tif --task Optimum_Parameter --start  2 --end 20 --step 1 --metric mahalanobis
 ```
 #### Multi_Segmentation
 ```
@@ -48,7 +48,7 @@ python multi_seg.py --data data/clipped.tif --task Multi_Segmentation_With_Optim
 ```
 
 
-Docker Container'a girmeden çalıştırmak için
+### Docker Container'a girmeden çalıştırmak için
 ```
 docker exec -it gtuseg_app_1 python multi_seg.py --data data/clipped.tif --task Multi_Segmentation --k_value 5 --export_vector_layer Yes
 ```
