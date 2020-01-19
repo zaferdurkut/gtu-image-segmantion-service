@@ -156,7 +156,9 @@ def calculate_kmeans_inertia(model):
 
 @timerfunc
 def calculate_kmeans_distance(array,model,metric):
-    value = cdist(array, model.cluster_centers_, metric)
+    value = sum( 
+        np.min( 
+            cdist(array, model.cluster_centers_, metric), axis=1)) / array.shape[0]
     return value
 
 
